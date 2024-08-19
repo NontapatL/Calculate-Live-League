@@ -1,155 +1,242 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>คำนวณค่าตัวนักเตะ</title>
+    <meta charset="utf-8">
+    <title>EA Sports FC Live Leauge - คำนวณราคานักเตะ</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
 
-<style>
-    body {
-        font-family: Kanit, sans-serif;
-        padding: 20px;
-        margin: 0;
-        font-size: 18px; /* ขนาดฟอนต์เริ่มต้น */
-    }
-    form {
-        max-width: 400px;
-        margin: auto;
-    }
-    label {
-        display: block;
-        margin: 10px 0 5px;
-    }
-    input[type="number"], select, input[type="text"] {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 20px;
-    }
-    button {
-        width: 100%;
-        padding: 10px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-    button:hover {
-        background-color: #45a049;
-    }
-    @media (max-width: 600px) {
-        body, form {
-            padding: 10px;
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500&family=Jost:wght@500;600;700&family=Mitr:wght@400;500&display=swap" rel="stylesheet"> 
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    
+    <style>
+        #result {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-    }
-</style>
-
-<script>
-function calculateValue() {
-    var level = parseInt(document.getElementById("level").value);
-    var ovr = parseInt(document.getElementById("ovr").value);
-    var fp = parseInt(document.getElementById("fp").value);
-    var reputation = document.getElementById("reputation").value;
-    var contractLength = parseInt(document.getElementById("contractLength").value);
-    var adjustment = parseInt(document.getElementById("adjustment").value);
-
-    var reputationValue = {
-        "Regular": 5,
-        "Famous": 10,
-        "Top Class": 15,
-        "World Class": 20,
-        "Legendary": 25
-    };
-
-    var ovrValue = 0;
-    if (ovr >= 95) ovrValue = 40;
-    else if (ovr >= 90) ovrValue = 35;
-    else if (ovr >= 85) ovrValue = 30;
-    else if (ovr >= 80) ovrValue = 25;
-    else if (ovr >= 75) ovrValue = 20;
-    else if (ovr >= 70) ovrValue = 15;
-
-    var playerValue = fp + reputationValue[reputation] + ovrValue + (contractLength * 2) + adjustment;
-    var tax = playerValue * 0.80;
-
-    document.getElementById("playerValue").value = playerValue.toFixed(2);
-    document.getElementById("tax").value = tax.toFixed(2);
-}
-</script>
+        
+        #result p {
+            margin-bottom: 10px;
+        }
+        
+        h1.mb-5 {
+            font-family: 'Mitr', sans-serif;
+        }
+    </style>
 </head>
-<body>
-<center><h1>คำนวณค่าตัวนักเตะ</h1></center>
-<form>
-    <label>ค่าระดับนักเตะ: </label>
-    <select id="level">
-        <option value="5" selected>+5</option>
-        <option value="6">+6</option>
-        <option value="7">+7</option>
-        <option value="8">+8</option>
-        <option value="9">+9</option>
-    </select><br><br>
 
-    <label>ค่า OVR: </label>
-    <input type="number" id="ovr"><br><br>
+<body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="51">
+    <div class="container-xxl bg-white p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
 
-    <label>ค่า FP: </label>
-    <input type="number" id="fp"><br><br>
+        <!-- Contact Start -->
+			<div class="container-xxl py-5" id="contact">
+				<div class="container py-5 px-lg-5">
+					<div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+						<h5 class="text-primary-gradient fw-medium" style="font-family: 'Mitr', sans-serif;">EA Sports FC Live League</h5>
+						<h1 class="mb-5" style="font-family: 'Mitr', sans-serif;">คำนวณราคานักเตะ</h1>
+					</div>
+					<div class="row justify-content-center">
+						<div class="col-lg-9">
+							<div class="wow fadeInUp" data-wow-delay="0.3s">
+								<p class="text-center mb-4" style="font-family: 'Mitr', sans-serif;">กรุณากรอก OVR / FP และ ชื่อเสียงของนักเตะที่ต้องการขาย และกดที่ปุ่มคำนวณเพื่อคำนวณหาราคานักเตะที่ถูกต้อง</p>
+								<form id="playerForm">
+									<div class="row g-3">
+										<div class="col-md-6">
+											<div class="form-floating">
+												<input type="number" class="form-control" id="ovr" placeholder="OVR +5/+6/+7 เลเวล 5:" required>
+												<label for="ovr" style="font-family: 'Mitr', sans-serif;">OVR +5/+6/+7 เลเวล 5</label>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-floating">
+												<input type="number" class="form-control" id="fp" placeholder="FP" required>
+												<label for="fp" style="font-family: 'Mitr', sans-serif;">FP</label>
+											</div>
+										</div>
+										<div class="col-12" id="contractField">
+											<div class="form-floating">
+												<input type="number" class="form-control" id="contractDuration" placeholder="ระยะสัญญานักเตะ">
+												<label for="contractDuration" style="font-family: 'Mitr', sans-serif;">ระยะสัญญานักเตะ</label>
+											</div>
+										</div>
+										<div class="col-12">
+											<div class="form-floating">
+												<select class="form-control" id="level" onchange="toggleContractField()" required>
+													<option value="1" style="font-family: 'Mitr', sans-serif;">+1</option>
+													<option value="2" style="font-family: 'Mitr', sans-serif;">+2</option>
+													<option value="3" style="font-family: 'Mitr', sans-serif;">+3</option>
+													<option value="4" style="font-family: 'Mitr', sans-serif;">+4</option>
+													<option value="5" style="font-family: 'Mitr', sans-serif;">+5</option>
+													<option value="6" style="font-family: 'Mitr', sans-serif;">+6</option>
+													<option value="7" style="font-family: 'Mitr', sans-serif;">+7</option>
+													<option value="8" style="font-family: 'Mitr', sans-serif;">+8</option>
+													<option value="6" style="font-family: 'Mitr', sans-serif;">+8 มีสัญญา</option>
+													<option value="9" style="font-family: 'Mitr', sans-serif;">+9</option>
+													<option value="10" style="font-family: 'Mitr', sans-serif;">+10</option>
+												</select>
+												<label for="level" style="font-family: 'Mitr', sans-serif;">เลือกระดับ</label>
+											</div>
+										</div>
+										<div class="col-12">
+											<div class="form-floating">
+												<select class="form-control" id="reputation">
+													<option value="Regular" style="font-family: 'Mitr', sans-serif;">Regular</option>
+													<option value="Famous" style="font-family: 'Mitr', sans-serif;">Famous</option>
+													<option value="Top Class" style="font-family: 'Mitr', sans-serif;">Top Class</option>
+													<option value="World Class" style="font-family: 'Mitr', sans-serif;">World Class</option>
+													<option value="Legendary" style="font-family: 'Mitr', sans-serif;">Legendary</option>
+												</select>
+												<label for="reputation" style="font-family: 'Mitr', sans-serif;">ชื่อเสียง</label>
+											</div>
+										</div>
+										<div class="col-12">
+											<div class="form-floating">
+												<select class="form-control" id="nhdYear">
+													<option value="no" style="font-family: 'Mitr', sans-serif;">ไม่ใช่</option>
+													<option value="yes" style="font-family: 'Mitr', sans-serif;">ใช่</option>
+												</select>
+												<label for="nhdYear" style="font-family: 'Mitr', sans-serif;">เป็นปี NHD หรือไม่</label>
+											</div>
+										</div>
+										<div class="col-12 text-center">
+											<button class="btn btn-primary-gradient rounded-pill py-3 px-5" type="submit">คำนวณ</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Contact End -->
+			<div id="result" class="container-xxl py-3"></div>
+			
+			<script>
+				document.getElementById("playerForm").addEventListener("submit", function(event) {
+					event.preventDefault();
+					calculatePlayerValue();
+				});
+			
+				function calculatePlayerValue() {
+					var ovr = parseInt(document.getElementById("ovr").value);
+					var fp = parseInt(document.getElementById("fp").value);
+					var reputation = document.getElementById("reputation").value;
+					var level = parseInt(document.getElementById("level").value);
+					var contractDuration = document.getElementById("contractDuration").value ? parseInt(document.getElementById("contractDuration").value) : 0;
+					var nhdYear = document.getElementById("nhdYear").value;
+			
+					var reputationValue = 0;
+					if (reputation === "Regular") {
+						reputationValue = 5;
+					} else if (reputation === "Famous") {
+						reputationValue = 10;
+					} else if (reputation === "Top Class") {
+						reputationValue = 15;
+					} else if (reputation === "World Class") {
+						reputationValue = 20;
+					} else if (reputation === "Legendary") {
+						reputationValue = 25;
+					}
+			
+					var powerValue = 0;
+					if (ovr >= 95) {
+						powerValue = 40;
+					} else if (ovr >= 90) {
+						powerValue = 35;
+					} else if (ovr >= 85) {
+						powerValue = 30;
+					} else if (ovr >= 80) {
+						powerValue = 25;
+					} else if (ovr >= 75) {
+						powerValue = 20;
+					} else if (ovr >= 70) {
+						powerValue = 15;
+					}
+			
+					// คำนวณตามระดับ
+					var levelValue = 0;
+					if (level === 7 || level === 8) {
+						levelValue = level * 2;
+					} else {
+						levelValue = contractDuration * 2;
+					}
+			
+					var playerValue = fp + powerValue + reputationValue + levelValue;
+			
+					// เพิ่มค่าตัวนักเตะถ้าเป็นปี NHD
+					if (nhdYear === "yes") {
+						playerValue += 50;
+					}
+			
+					var tax20Percent = playerValue - (playerValue * 0.2);
+			
+					var resultContainer = document.getElementById("result");
+					resultContainer.innerHTML =
+						"<p><span class='label'>ค่าตัวนักเตะ:</span> <span class='player-value' style='font-family: Mitr, sans-serif;'>" + playerValue.toFixed(0) + "</span></p>" +
+						"<p><span class='label'>คนขายได้รับ (ภาษี 20%):</span> <span class='tax-20' style='font-family: Mitr, sans-serif;'>" + tax20Percent.toFixed(0) + "</span></p>";
+				}
+			
+				function toggleContractField() {
+					var level = parseInt(document.getElementById("level").value);
+					var contractField = document.getElementById("contractField");
+					if (level === 7 || level === 8 || level === 9 || level === 10) {
+						contractField.style.display = "none";
+					} else {
+						contractField.style.display = "";
+					}
+				}
+			
+				// เมื่อหน้าเว็บโหลดเสร็จ ตรวจสอบการแสดงฟิลด์ระยะสัญญานักเตะ
+				window.onload = function() {
+					toggleContractField();
+				}
+			</script>
 
-    <label>ชื่อเสียง: </label>
-    <select id="reputation">
-        <option value="Regular">Regular</option>
-        <option value="Famous">Famous</option>
-        <option value="Top Class" selected>Top Class</option>
-        <option value="World Class">World Class</option>
-        <option value="Legendary">Legendary</option>
-    </select><br><br>
+    </div>
 
-    <label>ค่าระยะสัญญา: </label>
-    <select id="contractLength">
-	    <option value="7" selected>ตัว +7 ไม่มีสัญญา</option>
-		<option value="8">ตัว +8 ไม่มีสัญญา</option>
-		<option value="9">ตัว +9 ไม่มีสัญญา</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-    </select><br><br>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
-    <label>ส่วนลด/เพิ่ม: </label>
-    <select id="adjustment">
-        <option value="-10">-10</option>
-        <option value="-9">-9</option>
-		<option value="-8">-8</option>
-		<option value="-7">-7</option>
-		<option value="-6">-6</option>
-		<option value="-5">-5</option>
-		<option value="-4">-4</option>
-		<option value="-3">-3</option>
-		<option value="-2">-2</option>
-		<option value="-1">-1</option>
-		<option value="0" selected>0</option>
-		<option value="1">1</option>
-		<option value="2">2</option>
-		<option value="3">3</option>
-		<option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-    </select><br><br>
-
-    <button type="button" onclick="calculateValue()">คำนวณ</button>
-</form>
-
-<p>ค่าตัวนักเตะ: <input type="text" id="playerValue" readonly></p>
-<p>ภาษี 20%: <input type="text" id="tax" readonly></p>
-
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
 </body>
+
 </html>
